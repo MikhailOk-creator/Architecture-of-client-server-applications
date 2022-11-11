@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>WebSocket</title>
+    <script src="sockjs.js"></script>
+    <script src="stomp.min.js"></script>
+    <script type="text/javascript">
+        let stompClient = null;
+
+        function sendMessage() {
+            let text = document.getElementById('text').value;
+            stompClient.send("/chat", {}, JSON.stringify({'text': text}));
+        }
+
+        function showServerMessage(message) {
+            let msg = message.text
+            let div = document.getElementById('responsesDiv');
+            let p = document.createElement('p');
+            p.appendChild(document.createTextNode(msg));
+            div.appendChild(p);
+        }
+
+        let socket = new SockJS('/websocket')
+        stompClient = Stomp.over(socket)
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/topic', function (response) {
+                showServerMessage(JSON.parse(response.body));
+            });
+        });
+    </script>
+</head>
+<body onload="disconnect()">
+<div>
+    <div>
+        <label for="text">Message to the server:</label>
+        <br>
+        <input type="text" id="text" placeholder="Enter a message"/>
+        <input type="button" onclick="sendMessage()" value="Send">
+    </div>
+    <br>
+    <div id="responsesDiv"></div>
+</div>
+
+</body>
+</html>
