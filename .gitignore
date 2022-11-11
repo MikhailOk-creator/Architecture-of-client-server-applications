@@ -31,3 +31,6 @@ bin/
 
 ### Microsft Windows ###
 *.docx
+
+### PDF ###
+*.pdf
