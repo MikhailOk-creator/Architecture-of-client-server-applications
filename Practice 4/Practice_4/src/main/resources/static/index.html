@@ -10,6 +10,11 @@
         function sendMessage() {
             let text = document.getElementById('text').value;
             stompClient.send("/chat", {}, JSON.stringify({'text': text}));
+            let msg = text
+            let div = document.getElementById('responsesDiv');
+            let p = document.createElement('p');
+            p.appendChild(document.createTextNode(msg));
+            div.appendChild(p);
         }
 
         function showServerMessage(message) {
